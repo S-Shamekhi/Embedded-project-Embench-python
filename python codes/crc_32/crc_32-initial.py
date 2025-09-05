@@ -3,8 +3,6 @@
 # Python port of Embench "crc32" benchmark
 
 # The polynomial lookup table (same as in C code)
-
-
 crc_32_tab = [
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
     0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
@@ -51,45 +49,43 @@ crc_32_tab = [
     0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 ]
 
-# Embench deterministic PRNG
-_next_beebs = 1
+# Embench uses a custom rand(); here we can use Python's random
+import random
 
-def srand_beebs(seed: int):
-    """Set seed for deterministic PRNG."""
-    global _next_beebs
-    _next_beebs = seed
 
-def rand_beebs() -> int:
-    """Return next pseudo-random byte (0..255)."""
-    global _next_beebs
-    _next_beebs = (_next_beebs * 1103515245 + 12345) & 0xFFFFFFFF
-    return (_next_beebs >> 16) & 0xFF
+def rand_beebs():
+    return random.randint(0, 255)
 
-def crc32pseudo() -> int:
-    """Compute a pseudo CRC32 checksum using deterministic random bytes."""
+
+def crc32pseudo():
+    """Compute a pseudo CRC32 checksum using random bytes."""
     oldcrc32 = 0xFFFFFFFF
     for _ in range(1024):
         octet = rand_beebs()
         oldcrc32 = crc_32_tab[(oldcrc32 ^ octet) & 0xFF] ^ (oldcrc32 >> 8)
     return ~oldcrc32 & 0xFFFFFFFF
 
+
 def benchmark_body(rpt: int) -> int:
     """Main benchmark loop."""
     r = 0
     for _ in range(rpt):
-        srand_beebs(0)  # reset seed each iteration
+        random.seed(0)  # equivalent to srand_beebs(0)
         r = crc32pseudo()
     return r % 32768
 
-def benchmark() -> int:
-    """Run the benchmark."""
+
+def benchmark():
+    # Scale factor from C: LOCAL_SCALE_FACTOR * CPU_MHZ
+    # For portability, just use LOCAL_SCALE_FACTOR = 170
     LOCAL_SCALE_FACTOR = 170
     CPU_MHZ = 1  # placeholder
     return benchmark_body(LOCAL_SCALE_FACTOR * CPU_MHZ)
 
+
 def verify_benchmark(r: int) -> bool:
-    """Check benchmark result."""
     return r == 11433
+
 
 if __name__ == "__main__":
     result = benchmark()
