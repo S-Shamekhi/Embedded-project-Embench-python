@@ -50,7 +50,8 @@ this folder has 2 python files , here is what does each include :
 * Converted to Python while keeping **all operations**.
 * Verification: `False` because Python **doesn’t automatically overflow integers** like C does.
   what does this mean?
-  if you run the python file you will get this result  :
+  if we run the python file we will get this result  :
+  
   <img width="480" height="54" alt="image" src="https://github.com/user-attachments/assets/aa7f058d-c178-4697-943f-c062c0e7dce9" />
 
 * Useful for:
