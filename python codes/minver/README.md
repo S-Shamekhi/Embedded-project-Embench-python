@@ -37,13 +37,6 @@ This Python code is a faithful conversion of the **BEEBS `minver` benchmark**, o
 
 This Python version preserves the **algorithmic structure**, making it suitable for **embedded systems benchmarking or educational purposes**.
 
----
-Ah — now we’re hitting the **classic floating-point precision and representation issue** between C and Python. Let me explain carefully.
-
----
-when we run it this is what we can expect :
-
-![alt text](image.png)
 
 ###  Why `verify_benchmark()` returns `False`
 
@@ -66,3 +59,4 @@ Even though the logic is identical, the **determinant and inverted matrix values
    * Even differences in the 7th–8th decimal place will cause the equality check to fail (`float_eq` with `1e-6` may not be enough because the C benchmark uses single-precision rounding).
 
 ---
+
