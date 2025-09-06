@@ -38,25 +38,4 @@ This Python code is a faithful conversion of the **BEEBS `minver` benchmark**, o
 This Python version preserves the **algorithmic structure**, making it suitable for **embedded systems benchmarking or educational purposes**.
 
 
-###  Why `verify_benchmark()` returns `False`
-
-Even though the logic is identical, the **determinant and inverted matrix values differ slightly**. The reasons:
-
-1. **Floating-point arithmetic differences**:
-
-   * In C, `float` is usually **32-bit single precision**.
-   * In Python, all floats are **64-bit double precision** by default.
-   * Operations like `/` and `*` accumulate rounding differently in 64-bit vs 32-bit.
-
-2. **Order of operations / compiler behavior**:
-
-   * The C compiler might optimize expressions in a way that affects rounding.
-   * Python executes arithmetic exactly as written in its interpreter, so some intermediate results are slightly different.
-
-3. **`verify_benchmark` tolerances**:
-
-   * The benchmark expects **exactly** the C floating-point values.
-   * Even differences in the 7th–8th decimal place will cause the equality check to fail (`float_eq` with `1e-6` may not be enough because the C benchmark uses single-precision rounding).
-
----
 
